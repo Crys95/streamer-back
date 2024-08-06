@@ -1,8 +1,9 @@
 <?php
 
-use App\Http\Controllers\Acao\AcaoController;
-use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Filmes\FilmesController;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Comments\CommentsController;
+use App\Http\Controllers\Likes\LikesController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,13 +23,20 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('login', [AuthController::class, 'login'])->withoutMiddleware('auth:sanctum');
     Route::post('logout', [AuthController::class, 'logout']);
     });
-    Route::prefix('Filmes')->group(function () {
-        Route::get('List', [FilmesController::class, 'ListMovie'])->withoutMiddleware('auth:sanctum');
+
+    Route::prefix('movie')->group(function () {
+        Route::get('list', [FilmesController::class, 'ListMovie'])->withoutMiddleware('auth:sanctum');
         Route::get('{id}', [FilmesController::class, 'getMovieDetails'])->withoutMiddleware('auth:sanctum');
+        Route::get('video/{id}', [FilmesController::class, 'getMovieVideos'])->withoutMiddleware('auth:sanctum');
     });
-    Route::prefix('action')->group(function () {
-        Route::get('list', [AcaoController::class, 'AcaoController'])->withoutMiddleware('auth:sanctum');
-        Route::get('like', [AcaoController::class, 'AcaoController'])->withoutMiddleware('auth:sanctum');
-        Route::get('comment', [AcaoController::class, 'getMovieDetails'])->withoutMiddleware('auth:sanctum');
+
+    Route::prefix('like')->group(function () {
+        Route::post('create', [LikesController::class, 'like']);
+        Route::get('list', [LikesController::class, 'listLikes']);
+    });
+
+    Route::prefix('commit')->group(function () {
+        Route::post('create', [CommentsController::class, 'create']);
+        Route::get('list', [CommentsController::class, 'listComments']);
     });
 });

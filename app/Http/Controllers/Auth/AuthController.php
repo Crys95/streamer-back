@@ -9,7 +9,6 @@ use App\Http\Requests\Auth\RegisterRequest;
 use App\Repositories\Auth\AuthRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Request;
 
 class AuthController extends Controller
 {
@@ -37,16 +36,16 @@ class AuthController extends Controller
             $credentials = $request->validated();
             if (!Auth::attempt($credentials)) {
                 return response()->json([
-                    'message' => 'Email ou senha invalidos.'
+                    'message' => 'Email ou senha inválidos.'
                 ], 401);
             }
-
-
+    
             $token = auth()->user()->createToken('authToken')->plainTextToken;
-        }catch (\Exception $e) {
+    
+        } catch (\Exception $e) {
             return Utils::exceptionReturn($e);
         }
-
+    
         return response()->json([
             'message' => 'Usuário logado com sucesso.',
             'token' => $token,

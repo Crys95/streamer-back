@@ -1,28 +1,23 @@
 <?php
 
-namespace App\Http\Controllers\Acao;
+namespace App\Repositories\Filmes;
 
-use App\Helpers\Utils;
-use App\Http\Controllers\Controller;;
-use App\Repositories\Auth\AuthRepository;
 use GuzzleHttp\Client;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Request;
-
-class AcaoController extends Controller
+class FilmesRepository
 {
-
-    public function __construct(
-        private readonly AuthRepository $authRepository
-    ) {
+    private $apiKey;
+    private $client;
+    public function __construct() {
+        $this->apiKey = config('services.apiKey.key');
+        $this->client = new Client();
     }
 
-    public function ListMovie(Request $request): JsonResponse
+    public function ListMovie($request)
     {
-        $client = new Client();
-        $apiKey = '59ddf547b167b9c783671e8c94c5673e';
-    
-        try {
+        $client = $this->client;
+        $apiKey = $this->apiKey;
+
             $response = $client->request('GET', 'https://api.themoviedb.org/3/movie/popular', [
                 'query' => [
                     'api_key' => $apiKey,
@@ -40,17 +35,13 @@ class AcaoController extends Controller
                 'status' => $response->getStatusCode(),
                 'data' => $body['results'] ?? [],
             ]);
-        } catch (\Exception $e) {
-            return Utils::exceptionReturn($e);
-        }
     }
 
-    public function getMovieDetails(Request $request, $movieId): JsonResponse
+    public function getMovieDetails($request, $movieId)
     {
-        $client = new Client();
-        $apiKey = '59ddf547b167b9c783671e8c94c5673e';
-    
-        try {
+        $client = $this->client;
+        $apiKey = $this->apiKey;
+
             $response = $client->request('GET', "https://api.themoviedb.org/3/movie/{$movieId}", [
                 'query' => [
                     'api_key' => $apiKey,
@@ -67,10 +58,28 @@ class AcaoController extends Controller
                 'status' => $response->getStatusCode(),
                 'data' => $body,
             ]);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
     }
+
+    public function getMovieVideos($movieId): JsonResponse
+    {
+        $client = $this->client;
+        $apiKey = $this->apiKey;
     
+            $response = $client->request('GET', "https://api.themoviedb.org/3/movie/{$movieId}/videos", [
+                'query' => [
+                    'api_key' => $apiKey,
+                    'language' => 'pt-BR',
+                ],
+                'headers' => [
+                    'Accept' => 'application/json',
+                ],
+            ]);
     
+            $body = json_decode($response->getBody()->getContents(), true);
+    
+            return response()->json([
+                'status' => $response->getStatusCode(),
+                'videos' => $body['results'],
+            ]);
+    }
 }
