@@ -17,24 +17,31 @@ class FilmesRepository
     {
         $client = $this->client;
         $apiKey = $this->apiKey;
-
-            $response = $client->request('GET', 'https://api.themoviedb.org/3/movie/popular', [
-                'query' => [
-                    'api_key' => $apiKey,
-                    'language' => 'pt-BR',
-                    'page' => 1,
-                ],
-                'headers' => [
-                    'Accept' => 'application/json',
-                ],
-            ]);
     
-            $body = json_decode($response->getBody()->getContents(), true);
     
-            return response()->json([
-                'status' => $response->getStatusCode(),
-                'data' => $body['results'] ?? [],
-            ]);
+        $queryParams = [
+            'api_key' => $apiKey,
+            'language' => 'pt-BR',
+            'page' => $request['pagina'],
+            'region' => 'BR',
+            'query' => $request['filme'], 
+        ];
+    
+        $response = $client->request('GET', "https://api.themoviedb.org/3/{$request['tipo']}", [
+            'query' => $queryParams,
+            'headers' => [
+                'Accept' => 'application/json',
+            ],
+        ]);
+    
+        $body = json_decode($response->getBody()->getContents(), true);
+    
+        $limitedResults = array_slice($body['results'], 0, 12);
+    
+        return response()->json([
+            'status' => $response->getStatusCode(),
+            'data' => $limitedResults,
+        ]);
     }
 
     public function getMovieDetails($request, $movieId)

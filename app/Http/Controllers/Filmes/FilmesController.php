@@ -6,7 +6,7 @@ use App\Helpers\Utils;
 use App\Http\Controllers\Controller;
 use App\Repositories\Filmes\FilmesRepository;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 
 class FilmesController extends Controller
 {
