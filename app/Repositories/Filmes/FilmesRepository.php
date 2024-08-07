@@ -8,26 +8,25 @@ class FilmesRepository
 {
     private $apiKey;
     private $client;
+    private $url;
     public function __construct() {
         $this->apiKey = config('services.apiKey.key');
+        $this->url = config('services.apiFilmes.url');
         $this->client = new Client();
     }
 
     public function ListMovie($request)
     {
-        $client = $this->client;
-        $apiKey = $this->apiKey;
-    
     
         $queryParams = [
-            'api_key' => $apiKey,
+            'api_key' => $this->apiKey,
             'language' => 'pt-BR',
             'page' => $request['pagina'],
             'region' => 'BR',
             'query' => $request['filme'], 
         ];
     
-        $response = $client->request('GET', "https://api.themoviedb.org/3/{$request['tipo']}", [
+        $response = $this->client->request('GET', "{$this->url}/{$request['tipo']}", [
             'query' => $queryParams,
             'headers' => [
                 'Accept' => 'application/json',
@@ -46,12 +45,9 @@ class FilmesRepository
 
     public function getMovieDetails($request, $movieId)
     {
-        $client = $this->client;
-        $apiKey = $this->apiKey;
-
-            $response = $client->request('GET', "https://api.themoviedb.org/3/movie/{$movieId}", [
+            $response = $this->client->request('GET', "{$this->url}/movie/{$movieId}", [
                 'query' => [
-                    'api_key' => $apiKey,
+                    'api_key' => $this->apiKey,
                     'language' => 'pt-BR',
                 ],
                 'headers' => [
@@ -69,12 +65,10 @@ class FilmesRepository
 
     public function getMovieVideos($movieId): JsonResponse
     {
-        $client = $this->client;
-        $apiKey = $this->apiKey;
-    
-            $response = $client->request('GET', "https://api.themoviedb.org/3/movie/{$movieId}/videos", [
+
+            $response = $this->client->request('GET', "{$this->url}/movie/{$movieId}/videos", [
                 'query' => [
-                    'api_key' => $apiKey,
+                    'api_key' => $this->apiKey,
                     'language' => 'pt-BR',
                 ],
                 'headers' => [
