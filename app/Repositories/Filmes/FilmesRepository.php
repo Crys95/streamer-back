@@ -43,7 +43,7 @@ class FilmesRepository
         ]);
     }
 
-    public function getMovieDetails($request, $movieId)
+    public function getMovieDetails($movieId)
     {
             $response = $this->client->request('GET', "{$this->url}/movie/{$movieId}", [
                 'query' => [

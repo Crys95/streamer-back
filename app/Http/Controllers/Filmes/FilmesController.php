@@ -26,11 +26,11 @@ class FilmesController extends Controller
         }
     }
 
-    public function getMovieDetails(Request $request, $movieId): JsonResponse
+    public function getMovieDetails($movieId): JsonResponse
     {
 
         try {
-            return $this->filmesRepository->getMovieDetails($request, $movieId);
+            return $this->filmesRepository->getMovieDetails($movieId);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
