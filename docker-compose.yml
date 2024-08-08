@@ -1,0 +1,43 @@
+version: "3.5"
+
+services:
+  streamer-back:
+   container_name: streamer-back
+   build: .
+   ports:
+    - "8000:8000"
+   restart: always
+   depends_on:
+    - db
+   volumes:
+    - .:/app/streamer-back
+    - vendor-streamer-back:/app/streamer-back/vendor
+   networks:
+    - laravel
+
+  db:
+    image: mysql:5.7
+    container_name: laravel-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: streamer
+      MYSQL_USER: streamer
+      MYSQL_PASSWORD: laravel
+    ports:
+      - "3306:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - laravel
+
+networks:
+  laravel:
+   name: laravel
+   driver: bridge
+
+volumes:
+  vendor-streamer-back:
+    name: vendor-streamer-back
+  dbdata:
+    driver: local
