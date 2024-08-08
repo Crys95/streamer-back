@@ -25,13 +25,14 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::prefix('movie')->group(function () {
-        Route::get('list', [FilmesController::class, 'ListMovie'])->withoutMiddleware('auth:sanctum');
-        Route::get('{id}', [FilmesController::class, 'getMovieDetails'])->withoutMiddleware('auth:sanctum');
-        Route::get('video/{id}', [FilmesController::class, 'getMovieVideos'])->withoutMiddleware('auth:sanctum');
+        Route::get('list', [FilmesController::class, 'ListMovie']);
+        Route::get('{id}', [FilmesController::class, 'getMovieDetails']);
+        Route::get('video/{id}', [FilmesController::class, 'getMovieVideos']);
     });
 
     Route::prefix('like')->group(function () {
         Route::post('create', [LikesController::class, 'like']);
+        Route::get('get', [LikesController::class, 'Getlike']);
         Route::get('list', [LikesController::class, 'listLikes']);
     });
 

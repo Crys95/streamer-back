@@ -16,11 +16,11 @@ class CommentsRepository
     public function create($request)
     {
         $identify = auth()->user()->identify;
-
+        $name = auth()->user()->name;
         $this->CommentsModel->create([
             'user_id' => $identify,
             'movie_id' => $request['movie_id'],
-            'name' => $request['name'],
+            'name' => $name,
             'date' => now(),
             'comment' => $request['comment'],
         ]);
@@ -28,11 +28,13 @@ class CommentsRepository
         return response()->json('success create', 201);
     }
 
-    public function listComments()
+    public function listComments($request)
     {
-        $listComments = $this->CommentsModel
-            ->paginate(10);
-        $response = $this->DefaultPaginateService->DefaultPaginate($listComments, $listComments->items());
+        $listComments = $this->CommentsModel->where('movie_id', $request['movie_id'])->get();
+
+        $response = [
+            "data" => $listComments
+        ];
 
         return response()->json($response);
     }

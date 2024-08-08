@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Comments\CommentsRequest;
 use App\Repositories\Comments\CommentsRepository;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class CommentsController extends Controller
 {
@@ -25,11 +26,11 @@ class CommentsController extends Controller
         }
     }
 
-    public function listComments(): JsonResponse
+    public function listComments(Request $request): JsonResponse
     {
 
         try {
-            return $this->commentsRepository->listComments();
+            return $this->commentsRepository->listComments($request);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }

@@ -14,7 +14,6 @@ class CommentsRequest extends FormRequest
     {
         return [
             'movie_id' => ['required', 'integer'],
-            'name' => ['required', 'string'],
             'comment' => ['required', 'string', 'max:255']
         ];
     }

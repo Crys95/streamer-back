@@ -40,13 +40,29 @@ class LikesRepository
         }
     }
 
+    public function Getlike($request)
+    {
+        $identify = auth()->user()->identify;
+        $movieId = $request['movie_id'];
+
+        $existingLike = $this->likeModel
+            ->where('user_id', $identify)
+            ->where('movie_id', $movieId)
+            ->exists();
+
+            return response()->json($existingLike);
+    }
+
     public function listLikes()
     {
         $identify = auth()->user()->identify;
         $likes = $this->likeModel
             ->where('user_id', $identify)
-            ->paginate(10);
-        $response = $this->DefaultPaginateService->DefaultPaginate($likes, $likes->items());
+            ->get();
+
+        $response = [
+            "data" => $likes
+        ];
 
         return response()->json($response);
     }

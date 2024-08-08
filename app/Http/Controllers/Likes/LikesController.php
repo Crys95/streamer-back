@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Likes\LikesRequest;
 use App\Repositories\Likes\LikesRepository;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class LikesController extends Controller
 {
@@ -21,6 +22,16 @@ class LikesController extends Controller
 
         try {
             return $this->likesRepository->like($request);
+        } catch (\Exception $e) {
+            return Utils::exceptionReturn($e);
+        }
+    }
+
+    public function Getlike(Request $request): JsonResponse
+    {
+
+        try {
+            return $this->likesRepository->Getlike($request);
         } catch (\Exception $e) {
             return Utils::exceptionReturn($e);
         }
